@@ -8,12 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import UnivariateSpline
 
-def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len, res,ymin,ymax,outfig_name):
-    
-    if FS < 0.8:
-        title = "FS= "+ str(FS) + ", ecDNA"
-    else:
-        title = "FS= "+ str(FS) + ", HSR"
+def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title,res,ymin,ymax,outfig_name):
     
     ## plot
     plt.figure(figsize=(20,10))
@@ -48,9 +43,14 @@ def diff(CII,periods,chr_len, res,ymin,ymax,outfig):
     nd2 = nd[int(0.9*len(x_range)):]      ## top 10%
     FS = nd2.sum()/nd.sum()
     
+    if FS < 0.6:
+        title = "FS= "+ str(FS) + ", ecDNA"
+    else:
+        title = "FS= "+ str(FS) + ", HSR"
+        
     outfig_name = outfig+"_Second_Derivation.pdf"
     
-    GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len, res,ymin,ymax,outfig_name)
+    GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title, res,ymin,ymax,outfig_name)
     
     
 
@@ -67,8 +67,13 @@ def spline_diff(CII, chr_len, res, ymin, ymax, outfig):
     nd2 = nd[int(0.9*len(x_range)):]      ## top 10%
     FS = nd2.sum()/nd.sum()
     
+    if FS < 0.8:
+        title = "FS= "+ str(FS) + ", ecDNA"
+    else:
+        title = "FS= "+ str(FS) + ", HSR"
+    
     outfig_name = outfig+"_spline_Second_Derivation.pdf"
-    GWIFA_plot(FS,CII,CIIs,CIIs_2d,x_range,chr_len, res,ymin,ymax,outfig_name)
+    GWIFA_plot(FS,CII,CIIs,CIIs_2d,x_range,chr_len,title,res,ymin,ymax,outfig_name)
     
  
     
