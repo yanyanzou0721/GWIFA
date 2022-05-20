@@ -50,8 +50,8 @@ from FS import FS
               default=100000,
               help="resolution of input matrix")
 
-@click.option("liner_fit","-fit",
-              default=True,type=bool,
+@click.option("--fit/--no-fit",
+              default=True,
               help="Conduct linear fit on cumulative interaction intensity")
 
 @click.option("spacing","-s",
