@@ -12,7 +12,6 @@ Copyright (c) 2022 yyzou.
 
 import click
 import os
-import pickle
 from os.path import exists
 import pandas as pd
 from zoom import zoom
@@ -25,7 +24,7 @@ from FS import FS
 
 @click.option("pre","-p",
               default=None,
-              help="if already have zoomed target region contact")
+              help="if already have zoomed target region contact, pass the target region .xsl")
 
 @click.option("matrix","-m",
               default=None,
