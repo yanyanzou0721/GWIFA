@@ -53,7 +53,6 @@ def zoom(cnv_file, interaction_file,outname,drop_chrom=None):
     
     target_interaction.to_csv(outname+"_target_region.xls",sep="\t",index=False)
     
-    
     return target_interaction
     
     
