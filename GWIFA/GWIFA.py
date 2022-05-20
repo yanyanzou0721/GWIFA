@@ -75,7 +75,7 @@ from FS import FS
     help="name of output figure.")
 
 
-def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pre=None,liner_fit=True, spacing=3, ymin=-100, ymax=100, outdir="./", outfig="test"):
+def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pre=None,fit=True, spacing=3, ymin=-100, ymax=100, outdir="./", outfig="test"):
     if not exists(outdir):
         os.mkdir(outdir)
     
@@ -87,9 +87,10 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
     
     
     chr_len = readchr(chrom_length_info,resolution,drop_chrom)
-    cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)
-    FS(cumulative_interaction_intensity,chr_len,resolution,outfig)
     
+    cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)
+    
+    FS(cumulative_interaction_intensity,chr_len,resolution,outfig,ymin,ymax,fit, spacing)
     return " done ^_^ "
 
 if __name__ == "__main__":

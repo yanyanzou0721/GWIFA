@@ -37,7 +37,7 @@ def diff(CII,periods,chr_len, res,ymin,ymax,outfig):
     y = CII["cumsum"].to_list()
     CIIs = UnivariateSpline(x,y)                 ### smooth
     ## caculate FS score
-    CII_2d = CII["cumsum"].diff(periods=periods).diff(periods=periods).loc[x_range]/(periods^2)
+    CII_2d = (CII["cumsum"].diff(periods=periods).diff(periods=periods)/(periods^2)).to_numpy()[x_range]
     
     nd = np.sort([200 if i>200 else i for i in abs(CII_2d)])  ## polar distribution
     nd2 = nd[int(0.9*len(x_range)):]      ## top 10%
