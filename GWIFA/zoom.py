@@ -11,19 +11,20 @@ Ussage: python zoom.py cnv.bed whole_genome_interaction.txt outname
 
 import pandas as pd
 from sys import argv
-import pickle
 
-def pre(cnv_file,interaction_file,drop_chrom):
+
+def pre_cnv(cnv_file):
     cnv_region = pd.read_table(cnv_file,header=None,sep="\t")  ## bed format, [chrom, start, end, others]
-    
+    return cnv_region
+
+def pre_mat(interaction_file,drop_chrom):
     whole_hic = pd.read_table(interaction_file)   ### "whole_genome_interaction.txt"
     if drop_chrom:     ### if not None
         if type(drop_chrom)!=list:
             drop_chrom=[drop_chrom]
         whole_hic = whole_hic[(~whole_hic["chrom1"].astype('str').isin(drop_chrom)) & (~whole_hic["chrom2"].astype('str').isin(drop_chrom))]
-    return cnv_region, whole_hic
-    
-    
+    return whole_hic
+
 
 def overlap(series,cnv):
     if len(cnv.shape)>1:
@@ -43,21 +44,17 @@ def overlap(series,cnv):
                 return 1
 
 def zoom(cnv_file, interaction_file,outname,drop_chrom=None):
-    cnv_region, whole_hic = pre(cnv_file, interaction_file,drop_chrom)   ### data preparation
+    cnv_region = pre_cnv(cnv_file)
+    whole_hic = pre_mat(interaction_file, drop_chrom)  ### data preparation
 
     whole_hic["overlap"] = whole_hic.apply(lambda x: overlap(x,cnv_region),axis=1)
     #### overlaped interactions
     target_interaction = whole_hic.loc[whole_hic["overlap"]==1]
-    #target_interaction.to_csv(outname,sep="\t",index=False)
     
-    pac_result = {"cnv_region":cnv_region, "target_interaction":target_interaction}
-    file = open(outname, 'wb')   
-    # dump information to a .pkl file
-    pickle.dump(pac_result, file)
-    # close the file
-    file.close()
+    target_interaction.to_csv(outname+"_target_region.xls",sep="\t",index=False)
     
-    return pac_result
+    
+    return target_interaction
     
     
 

@@ -22,9 +22,9 @@ def readchr(chr_len_info,res,drop_chrom=None):
 
 
 
-def fitbin(intera_mat,organize,cnv_region, chr_len, res):
+def fitbin(intera_mat,organ,cnv_info, chr_len, res):
     
-    intera_mat["organize"] = organize
+    intera_mat["organ"] = organ
 
     intera_mat["count"]=intera_mat["count"].astype("int")
     
@@ -33,10 +33,11 @@ def fitbin(intera_mat,organize,cnv_region, chr_len, res):
     intera_mat["chrom2_bin"] = intera_mat.apply(lambda x: int(x["start2"]/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x["chrom2"])])+1,axis=1)
     
     ## region info
-    cnv_region["start_bin"] = cnv_region.apply(lambda x: int(int(x[1])/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==x[0].astype("str")])+1,axis=1)
-    cnv_region["end_bin"] = cnv_region.apply(lambda x: int(int(x[2])/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==x[0].astype("str")])+1,axis=1)
+    cnv_region = pd.read_table(cnv_info,header=None,sep="\t")
+    cnv_region["start_bin"] = cnv_region.apply(lambda x: int(int(x[1])/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x[0])])+1,axis=1)
+    cnv_region["end_bin"] = cnv_region.apply(lambda x: int(int(x[2])/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x[0])])+1,axis=1)
 
-    ### the interaction may presented as  cnv_VS_costomer-region or costomer-region_VS_cnv or cnv_cnv 
+    ### the interaction may presented as cnv_VS_costomer-region or costomer-region_VS_cnv or cnv_cnv 
     intera_mat["customer"] = intera_mat.apply(lambda x:x["chrom2_bin"] if x["chrom1_bin"] in range(cnv_region["start_bin"].loc[0],cnv_region["end_bin"].loc[0]+1) else x["chrom1_bin"],axis=1) 
 
 

@@ -14,6 +14,7 @@ import click
 import os
 import pickle
 from os.path import exists
+import pandas as pd
 from zoom import zoom
 from fitbin import readchr, fitbin
 from FS import FS
@@ -30,7 +31,7 @@ from FS import FS
               default=None,
               help="Contact matrix of fixed resolution")
 
-@click.option("organize","-o",
+@click.option("organ","-o",
               default=None,
               help="Name of the subject")
 
@@ -75,26 +76,22 @@ from FS import FS
     help="name of output figure.")
 
 
-def GWIFA(matrix, organize, cnv_info, chrom_length_info, drop_chrom, resolution, pre=None,liner_fit=True, spacing=3, ymin=-100, ymax=100, outdir="./", outfig="test"):
+def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pre=None,liner_fit=True, spacing=3, ymin=-100, ymax=100, outdir="./", outfig="test"):
     if not exists(outdir):
         os.mkdir(outdir)
     
     if pre:
-        fileo = open(pre, 'rb')
-        # loading data
-        pac1 = pickle.load(fileo)
-        # close the file
-        fileo.close()
+        target_interaction = pd.read_table(pre,sep="\t")
     else:
-        pac1 = zoom(cnv_info, matrix, organize,drop_chrom)
-    ### pac1 is a dictionary, with 2 keys ["cnv_region","target_interaction"]
+        target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
+
     
     
     chr_len = readchr(chrom_length_info,resolution,drop_chrom)
-    cumulative_interaction_intensity = fitbin(pac1["target_interaction"],organize,pac1["cnv_region"], chr_len,resolution)
+    cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)
     FS(cumulative_interaction_intensity,chr_len,resolution,outfig)
     
     return " done ^_^ "
 
 if __name__ == "__main__":
-    GWIFA(pre, matrix, organize, cnv_info, chrom_length_info, drop_chrom, resolution, liner_fit, spacing, ymin, ymax, outdir, outfig)
+    GWIFA()
