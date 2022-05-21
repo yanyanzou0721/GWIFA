@@ -32,25 +32,26 @@ def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title,res,ymin,ymax,outfig_nam
 
 def diff(CII,periods,chr_len, res,ymin,ymax,outfig):  
     
-    x_range = np.linspace(1,chr_len["bins"].sum()-1,10000,dtype="int")
+    x_range = np.linspace(0,chr_len["bins"].sum()-2,10000,dtype="int")
     x = CII["bin"].to_list()
     y = CII["cumsum"].to_list()
     CIIs = UnivariateSpline(x,y)                 ### smooth
     ## caculate FS score
-    CII_2d = (CII["cumsum"].diff(periods=periods).diff(periods=periods)/(periods^2)).to_numpy()[x_range]
+    CII_2d = CII["cumsum"].diff(periods=periods).diff(periods=periods).fillna(0).loc[x_range]/(periods^2)
     
     nd = np.sort([200 if i>200 else i for i in abs(CII_2d)])  ## polar distribution
     nd2 = nd[int(0.9*len(x_range)):]      ## top 10%
+    print([nd2.sum,nd.sum()])
     FS = nd2.sum()/nd.sum()
     
     if FS < 0.6:
-        title = "FS= "+ str(FS) + ", ecDNA"
+        title = "FS = "+ str(FS) + ", ecDNA"
     else:
-        title = "FS= "+ str(FS) + ", HSR"
+        title = "FS = "+ str(FS) + ", HSR"
         
     outfig_name = outfig+"_Second_Derivation.pdf"
     
-    GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title, res,ymin,ymax,outfig_name)
+    GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title, res,ymin,ymax*10,outfig_name)
     
     
 
@@ -68,9 +69,9 @@ def spline_diff(CII, chr_len, res, ymin, ymax, outfig):
     FS = nd2.sum()/nd.sum()
     
     if FS < 0.8:
-        title = "FS= "+ str(FS) + ", ecDNA"
+        title = "FS = "+ str(FS) + ", ecDNA"
     else:
-        title = "FS= "+ str(FS) + ", HSR"
+        title = "FS = "+ str(FS) + ", HSR"
     
     outfig_name = outfig+"_spline_Second_Derivation.pdf"
     GWIFA_plot(FS,CII,CIIs,CIIs_2d,x_range,chr_len,title,res,ymin,ymax,outfig_name)
