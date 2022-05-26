@@ -17,7 +17,7 @@ Required:
     resolution : int , resolution of the matrix
     
 Optional:
-    pre : file, if you have already run the script once 
+    pre : file, {organ}_target_region.xls if you have already run the script once 
     fit : bool, whether to conduct spline fitting. suggest value : True
     spacing=3
     ymin=-100
