@@ -28,7 +28,7 @@ def fitbin(intera_mat,organ,cnv_info, chr_len, res):
     intera_mat["start1"] =intera_mat["start1"].astype("int")
     intera_mat["start2"] =intera_mat["start2"].astype("int")
     chr_len["chr"] = chr_len['chr'].apply(lambda x: str(x))
-    print(intera_mat["chrom2"].unique())
+#    print(intera_mat["chrom2"].unique())
     intera_mat["chrom1_bin"] = intera_mat.apply(lambda x: int(x["start1"]/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x["chrom1"])])+1,axis=1)
     intera_mat["chrom2_bin"] = intera_mat.apply(lambda x: int(x["start2"]/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x["chrom2"])])+1,axis=1)
     

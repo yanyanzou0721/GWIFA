@@ -18,7 +18,7 @@ def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title,res,ymin,ymax,outfig_nam
     x = CII["bin"].to_list()
     y = CII["cumsum"].to_list()
     ax.plot(x,y,'ro',label = 'CII')
-    ax.plot(x_range,CIIs(x_range))     #### cumulative_interaction_intensity distribution
+    ax.plot(x_range,CIIs(x_range))     ####plot cumulative_interaction_intensity distribution
     ax.set_xticks(chr_len["bin_num"].to_list())
     ax.set_xticklabels(range(1,chr_len.shape[0]+1),rotation=45,size=8)
     

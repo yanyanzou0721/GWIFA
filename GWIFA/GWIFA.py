@@ -45,7 +45,7 @@ from FS import FS
 @click.option("drop_chrom","-d",
               default=None,
               multiple=True, 
-              help="chromosomes excluding from analysis, multiple use of -d if more than one chromosomes")
+              help="chromosomes excluding from analysis, if more than one chromosomes -d can be used for multiple times")
 
 @click.option("resolution","-res",
               default=100000,
