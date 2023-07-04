@@ -10,14 +10,12 @@ import numpy as np
 
 def readchr(chr_len_info,res,drop_chrom=None):
     chr_len = pd.read_table(chr_len_info,names=["chr","length"])
-    if drop_chrom:     ### if not None
-        if type(drop_chrom)!=list:
-            drop_chrom=[drop_chrom]
+    if drop_chrom:
         chr_len = chr_len[~chr_len["chr"].astype('str').isin(drop_chrom)]
     
     chr_len["bins"] = round(chr_len["length"].astype("int")/int(res))
     chr_len["bin_num"] = [0] + [int(chr_len["bins"].loc[:i-1].sum()) for i in  chr_len.index[1:]]
-    chr_len["chr"] = chr_len.astype("str")
+    chr_len["chr"] = chr_len["chr"].astype("str")
     return chr_len
 
 
@@ -27,8 +25,10 @@ def fitbin(intera_mat,organ,cnv_info, chr_len, res):
     intera_mat["organ"] = organ
 
     intera_mat["count"]=intera_mat["count"].astype("int")
-    
-    
+    intera_mat["start1"] =intera_mat["start1"].astype("int")
+    intera_mat["start2"] =intera_mat["start2"].astype("int")
+    chr_len["chr"] = chr_len['chr'].apply(lambda x: str(x))
+    print(intera_mat["chrom2"].unique())
     intera_mat["chrom1_bin"] = intera_mat.apply(lambda x: int(x["start1"]/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x["chrom1"])])+1,axis=1)
     intera_mat["chrom2_bin"] = intera_mat.apply(lambda x: int(x["start2"]/int(res))+int(chr_len["bin_num"].loc[chr_len["chr"]==str(x["chrom2"])])+1,axis=1)
     

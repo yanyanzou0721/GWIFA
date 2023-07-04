@@ -44,7 +44,8 @@ from FS import FS
 
 @click.option("drop_chrom","-d",
               default=None,
-              help="str or list, chromosome excluding from analysis")
+              multiple=True, 
+              help="chromosomes excluding from analysis, multiple use of -d if more than one chromosomes")
 
 @click.option("resolution","-res",
               default=100000,
@@ -84,8 +85,11 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
     else:
         target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
 
-    
-    
+    tmp=[]
+    for i in drop_chrom:
+        tmp.append(str(i))
+    drop_chrom = tmp
+    print(drop_chrom)
     chr_len = readchr(chrom_length_info,resolution,drop_chrom)
     
     cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)

@@ -20,8 +20,6 @@ def pre_cnv(cnv_file):
 def pre_mat(interaction_file,drop_chrom):
     whole_hic = pd.read_table(interaction_file)   ### "whole_genome_interaction.txt"
     if drop_chrom:     ### if not None
-        if type(drop_chrom)!=list:
-            drop_chrom=[drop_chrom]
         whole_hic = whole_hic[(~whole_hic["chrom1"].astype('str').isin(drop_chrom)) & (~whole_hic["chrom2"].astype('str').isin(drop_chrom))]
     return whole_hic
 
