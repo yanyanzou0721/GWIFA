@@ -5,8 +5,14 @@ Genome-wide interaction fluctuation analysis for ecDNA and HSR detection
 ```
 python GWIFA.py --help
 
-python GWIFA.py -m k562_contact_matrix.txt -o k562_chr13 -cnv k562_13.bed -l hg19.len -d Y -d M -res 100000 -fig k562_msv_chr13
 ```
+------
+## Using GWIFA from .hic file
+1. hic2cool convert file.hic file_100k.cool -r 100000 
+2. cooler dump --header --join -o file_100k.txt file_100k.cool
+3. python GWIFA.py -m file_100k.txt -o fig_title -cnv cnv_region.bed -l hg19.len -d Y -d M -res 100000 -fig fig_name
+
+#### Process one cnv area at a time, if there are multiple areas, set up multiple cnv_region.bed files.
 ------
 ## Input：
 ```
