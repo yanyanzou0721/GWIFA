@@ -82,10 +82,10 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
     
     if pre:
         target_interaction = pd.read_table(pre,sep="\t")
-        cnv_region = pd.read_table(cnv_file,header=None,sep="\t")
-        cnv_info=str(cnv_region[0])+":"+str(cnv_region[1])+"-"+str(cnv_region[2])
+        cnv_region = pd.read_table(cnv_info,header=None,sep="\t")
+        cnv_info_txt=str(cnv_region[0].loc[0])+":"+str(cnv_region[1].loc[0])+"-"+str(cnv_region[2].loc[0])
     else:
-        cnv_info,target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
+        cnv_info_txt,target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
 
     tmp=[]
     for i in drop_chrom:
@@ -100,13 +100,16 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
     fluctuation_score,amplification_type = FS(cumulative_interaction_intensity,chr_len,resolution,outfig,ymin,ymax,fit, spacing)
     
     report_content = f"""
-    Report:
-    -------
-    Amplification_region:{cnv_info}
-    Amplification_type:{amplification_type}
-    FA(fluctuation_score)={fluctuation_score}
+Genome-wide interaction fluctuation analysis
+Result Report:
+-------
+Sample:{organ}
+Amplification_region:{cnv_info_txt}
+
+FA(fluctuation_score)={fluctuation_score}
+Amplification_type={amplification_type}
     """
-    with open("report.txt", "w") as file:
+    with open(outdir+organ+"_"+cnv_info_txt+"_report.txt", "w") as file:
         file.write(report_content)
     
     return " done ^_^ "

@@ -37,4 +37,5 @@ Options:
 ## Output:
     1. {organ}_target_region.xls, interaction information between  the focal amplified region and whole Genome
     2. Second_Derivation.pdf,  figure of the final result
+    3. {organ}_{cnv_region}_report.txt, report of focal amplified region type and fluctuation score
 ```
