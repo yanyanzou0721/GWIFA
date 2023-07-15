@@ -82,19 +82,33 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
     
     if pre:
         target_interaction = pd.read_table(pre,sep="\t")
+        cnv_region = pd.read_table(cnv_file,header=None,sep="\t")
+        cnv_info=str(cnv_region[0])+":"+str(cnv_region[1])+"-"+str(cnv_region[2])
     else:
-        target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
+        cnv_info,target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
 
     tmp=[]
     for i in drop_chrom:
         tmp.append(str(i))
     drop_chrom = tmp
     print(drop_chrom)
+
     chr_len = readchr(chrom_length_info,resolution,drop_chrom)
     
     cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)
     
-    FS(cumulative_interaction_intensity,chr_len,resolution,outfig,ymin,ymax,fit, spacing)
+    fluctuation_score,amplification_type = FS(cumulative_interaction_intensity,chr_len,resolution,outfig,ymin,ymax,fit, spacing)
+    
+    report_content = f"""
+    Report:
+    -------
+    Amplification_region:{cnv_info}
+    Amplification_type:{amplification_type}
+    FA(fluctuation_score)={fluctuation_score}
+    """
+    with open("report.txt", "w") as file:
+        file.write(report_content)
+    
     return " done ^_^ "
 
 if __name__ == "__main__":

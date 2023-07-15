@@ -45,13 +45,16 @@ def diff(CII,periods,chr_len, res,ymin,ymax,outfig):
     FS = nd2.sum()/nd.sum()
     
     if FS < 0.6:
+        amplification_type = "ecDNA"
         title = "FS = "+ str(FS) + ", ecDNA"
     else:
+        amplification_type = "HSR"
         title = "FS = "+ str(FS) + ", HSR"
         
     outfig_name = outfig+"_Second_Derivation.pdf"
     
     GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title, res,ymin,ymax*10,outfig_name)
+    return FS, amplification_type
     
     
 
@@ -69,18 +72,19 @@ def spline_diff(CII, chr_len, res, ymin, ymax, outfig):
     FS = nd2.sum()/nd.sum()
     
     if FS < 0.8:
+        amplification_type = "ecDNA"
         title = "FS = "+ str(FS) + ", ecDNA"
     else:
+        amplification_type = "HSR"
         title = "FS = "+ str(FS) + ", HSR"
     
     outfig_name = outfig+"_spline_Second_Derivation.pdf"
     GWIFA_plot(FS,CII,CIIs,CIIs_2d,x_range,chr_len,title,res,ymin,ymax,outfig_name)
-    
+    return FS,amplification_type
  
     
 def FS(CII,chr_len,res,outfig,ymin=-100,ymax=100,liner_fit=True,periods=None):
     if liner_fit:
-        spline_diff(CII, chr_len, res, ymin, ymax, outfig)
+        return spline_diff(CII, chr_len, res, ymin, ymax, outfig)
     else:
-        diff(CII, periods, chr_len, res, ymin, ymax, outfig)
-    return None
+        return diff(CII, periods, chr_len, res, ymin, ymax, outfig)

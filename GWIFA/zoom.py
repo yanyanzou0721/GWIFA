@@ -43,6 +43,7 @@ def overlap(series,cnv):
 
 def zoom(cnv_file, interaction_file,outname,drop_chrom=None):
     cnv_region = pre_cnv(cnv_file)
+    cnv_region_txt = str(cnv_region[0])+":"+str(cnv_region[1])+"-"+str(cnv_region[2])
     whole_hic = pre_mat(interaction_file, drop_chrom)  ### data preparation
 
     whole_hic["overlap"] = whole_hic.apply(lambda x: overlap(x,cnv_region),axis=1)
@@ -52,7 +53,7 @@ def zoom(cnv_file, interaction_file,outname,drop_chrom=None):
     target_interaction = target_interaction.reset_index()
     target_interaction.to_csv(outname+"_target_region.xls",sep="\t",index=False)
     
-    return target_interaction
+    return cnv_region_txt,target_interaction
     
     
 
