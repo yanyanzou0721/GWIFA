@@ -21,13 +21,17 @@ def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title,res,ymin,ymax,outfig_nam
     ax.plot(x_range,CIIs(x_range))     ####plot cumulative_interaction_intensity distribution
     ax.set_xticks(chr_len["bin_num"].to_list())
     ax.set_xticklabels(range(1,chr_len.shape[0]+1),rotation=45,size=8)
-    
+    ax.set_xlabel('Chromosome')
+    ax.set_ylabel('Cumulative Interaction Intensity(CII)')    
+   
     ax = plt.subplot(1,2,2)
     plt.plot(x_range,CII_2d,c="darkred")
     ax.set_ylim(ymin,ymax)
     ax.set_xticks(chr_len["bin_num"].to_list())
     ax.set_xticklabels(range(1,chr_len.shape[0]+1),rotation=45,size=8)
-
+    ax.set_xlabel('Chromosome')
+    ax.set_ylabel('Second-order Difference of CII')
+    
     plt.savefig(outfig_name,bbox_inches="tight")
 
 def diff(CII,periods,chr_len, res,ymin,ymax,outfig):  
@@ -71,7 +75,7 @@ def spline_diff(CII, chr_len, res, ymin, ymax, outfig):
     nd2 = nd[int(0.9*len(x_range)):]      ## top 10%
     FS = nd2.sum()/nd.sum()
     
-    if FS < 0.8:
+    if FS < 0.6:
         amplification_type = "ecDNA"
         title = "FS = "+ str(FS) + ", ecDNA"
     else:

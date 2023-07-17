@@ -85,7 +85,7 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
         cnv_region = pd.read_table(cnv_info,header=None,sep="\t")
         cnv_info_txt=str(cnv_region[0].loc[0])+":"+str(cnv_region[1].loc[0])+"-"+str(cnv_region[2].loc[0])
     else:
-        cnv_info_txt,target_interaction = zoom(cnv_info, matrix, organ,drop_chrom)
+        cnv_info_txt,target_interaction = zoom(cnv_info, matrix, outdir+organ,drop_chrom)
 
     tmp=[]
     for i in drop_chrom:
@@ -97,7 +97,7 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
     
     cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)
     
-    fluctuation_score,amplification_type = FS(cumulative_interaction_intensity,chr_len,resolution,outfig,ymin,ymax,fit, spacing)
+    fluctuation_score,amplification_type = FS(cumulative_interaction_intensity,chr_len,resolution,outdir+outfig,ymin,ymax,fit, spacing)
     
     report_content = f"""
 Genome-wide interaction fluctuation analysis
