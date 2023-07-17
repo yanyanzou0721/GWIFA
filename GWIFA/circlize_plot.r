@@ -2,7 +2,7 @@ library(circlize)
 args <- commandArgs(trailingOnly = TRUE)
 input_xls = args[1] ## input file
 interaction_threshold = as.integer(args[2]) ## int
-out_name=argv[3]
+out_name=args[3]
 
 af = read.table(input_xls,header = 1)  ## interaction information between the focal amplified region and whole Genome
 af = subset(af,count>interaction_threshold)
