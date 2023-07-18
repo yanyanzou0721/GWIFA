@@ -106,7 +106,7 @@ Result Report:
 Sample:{organ}
 Amplification_region:{cnv_info_txt}
 
-FA(fluctuation_score)={fluctuation_score}
+FS(fluctuation_score)={fluctuation_score}
 Amplification_type={amplification_type}
     """
     with open(outdir+organ+"_"+cnv_info_txt+"_report.txt", "w") as file:
