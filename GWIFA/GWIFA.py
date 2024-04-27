@@ -42,6 +42,10 @@ from FS import FS
               default=None,
               help="Lenght of chromosomes, eq:hg19.len")
 
+@click.option("depth","-D",
+              default=10,
+              help="depth of sequencing")
+
 @click.option("drop_chrom","-d",
               default=None,
               multiple=True, 
@@ -76,7 +80,7 @@ from FS import FS
     help="name of output figure.")
 
 
-def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pre=None,fit=True, spacing=3, ymin=-100, ymax=100, outdir="./", outfig="test"):
+def GWIFA(matrix, organ, cnv_info, chrom_length_info, depth, drop_chrom, resolution, pre=None,fit=True, spacing=3, ymin=-100, ymax=100, outdir="./", outfig="test"):
     if not exists(outdir):
         os.mkdir(outdir)
     
@@ -95,11 +99,12 @@ def GWIFA(matrix, organ, cnv_info, chrom_length_info, drop_chrom, resolution, pr
 
     chr_len = readchr(chrom_length_info,resolution,drop_chrom)
     
-    cumulative_interaction_intensity = fitbin(target_interaction,organ,cnv_info, chr_len,resolution)
+    cumulative_interaction_intensity,high_contact_chroms = fitbin(target_interaction,organ,cnv_info, chr_len,depth, resolution)
     
-    fluctuation_score,amplification_type = FS(cumulative_interaction_intensity,chr_len,resolution,outdir+outfig,ymin,ymax,fit, spacing)
+    fluctuation_score,amplification_type = FS(cumulative_interaction_intensity,high_contact_chroms,chr_len,resolution,outdir+outfig,ymin,ymax,fit, spacing)
     
     report_content = f"""
+
 Genome-wide interaction fluctuation analysis
 Result Report:
 -------
