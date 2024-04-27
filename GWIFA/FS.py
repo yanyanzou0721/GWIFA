@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri May  6 11:55:46 2022
-
+updated on Sat Jan 30 21:29 2024
 @author: yyzou
 """
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import Counter
 from scipy.interpolate import UnivariateSpline
+
 
 def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title,res,ymin,ymax,outfig_name):
     
@@ -34,7 +36,9 @@ def GWIFA_plot(FS,CII,CIIs,CII_2d,x_range,chr_len,title,res,ymin,ymax,outfig_nam
     
     plt.savefig(outfig_name,bbox_inches="tight")
 
-def diff(CII,periods,chr_len, res,ymin,ymax,outfig):  
+
+
+def diff(CII,HCC,periods,chr_len,res,ymin,ymax,outfig):  
     
     x_range = np.linspace(0,chr_len["bins"].sum()-2,10000,dtype="int")
     x = CII["bin"].to_list()
@@ -48,9 +52,10 @@ def diff(CII,periods,chr_len, res,ymin,ymax,outfig):
     print([nd2.sum,nd.sum()])
     FS = nd2.sum()/nd.sum()
     
-    if FS < 0.6:
-        amplification_type = "ecDNA"
-        title = "FS = "+ str(FS) + ", ecDNA"
+    if int(HCC) >= 0.5*len(chr_len["chr"]):
+        if FS < 0.8:
+            amplification_type = "ecDNA"
+            title = "FS = "+ str(FS) + ", ecDNA"
     else:
         amplification_type = "HSR"
         title = "FS = "+ str(FS) + ", HSR"
@@ -62,7 +67,7 @@ def diff(CII,periods,chr_len, res,ymin,ymax,outfig):
     
     
 
-def spline_diff(CII, chr_len, res, ymin, ymax, outfig):   
+def spline_diff(CII, HCC,chr_len, res, ymin, ymax, outfig):   
     x_range = np.linspace(1,chr_len["bins"].sum()-1,10000,dtype="int") ### generate 10000 intervals between 
     
     ## caculate FS score
@@ -75,9 +80,10 @@ def spline_diff(CII, chr_len, res, ymin, ymax, outfig):
     nd2 = nd[int(0.9*len(x_range)):]      ## top 10%
     FS = nd2.sum()/nd.sum()
     
-    if FS < 0.6:
-        amplification_type = "ecDNA"
-        title = "FS = "+ str(FS) + ", ecDNA"
+    if int(HCC) >= 0.5*len(chr_len["chr"]):
+        if FS < 0.8:
+            amplification_type = "ecDNA"
+            title = "FS = "+ str(FS) + ", ecDNA"
     else:
         amplification_type = "HSR"
         title = "FS = "+ str(FS) + ", HSR"
@@ -87,8 +93,9 @@ def spline_diff(CII, chr_len, res, ymin, ymax, outfig):
     return FS,amplification_type
  
     
-def FS(CII,chr_len,res,outfig,ymin=-100,ymax=100,liner_fit=True,periods=None):
+def FS(CII,HCC,chr_len,res,outfig,ymin=-100,ymax=100,liner_fit=True,periods=None):
+    ## HCC:counts of high contact chromsomes
     if liner_fit:
-        return spline_diff(CII, chr_len, res, ymin, ymax, outfig)
+        return spline_diff(CII, HCC,chr_len,res, ymin, ymax, outfig)
     else:
-        return diff(CII, periods, chr_len, res, ymin, ymax, outfig)
+        return diff(CII,HCC, periods, chr_len, res, ymin, ymax, outfig)
