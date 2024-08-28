@@ -18,9 +18,16 @@ def readchr(chr_len_info,res,drop_chrom=None):
     chr_len["chr"] = chr_len["chr"].astype("str")
     return chr_len
 
+def high_contact_chrom(mat,depth):
+    mat["chrom1"] = mat["chrom1"].astype("str")
+    mat["chrom2"] = mat["chrom2"].astype("str")
+    mat = mat.sort_values(by="count",ascending=False).loc[(mat["count"]>depth) &(mat["chrom1"]!=mat["chrom2"])]
+    dic1 = mat["chrom1"].value_counts().to_dict()
+    dic2 = mat["chrom2"].value_counts().to_dict()
+    return len(dict(Counter(dic1)+Counter(dic2)).keys())
 
 
-def fitbin(intera_mat,organ,cnv_info, chr_len, res):
+def fitbin(intera_mat,organ,cnv_info,chr_len,depth, res):
     
     intera_mat["organ"] = organ
 
@@ -47,7 +54,9 @@ def fitbin(intera_mat,organ,cnv_info, chr_len, res):
     cumulative_interaction_intensity["count"] =  cumulative_interaction_intensity.apply(lambda x: int(intera_mat["count"].loc[intera_mat["customer"]==x["bin"]].sum()) if x["bin"] in intera_mat["customer"].to_list() else 0, axis=1)
     cumulative_interaction_intensity["cumsum"] = np.cumsum(cumulative_interaction_intensity["count"])
     
+    high_contact_chroms = high_contact_chrom(intera_mat,depth)
+
     
-    return cumulative_interaction_intensity
+    return cumulative_interaction_intensity,high_contact_chroms
 
     
